@@ -3,6 +3,7 @@ import { useState } from "react";
 export default function Home() {
   const [artist, setArtist] = useState("John Franklin");
   const [track, setTrack] = useState("Not on Me");
+  const [loading, setLoading] = useState(false);
   const [genre, setGenre] = useState("Retro Deep House");
   const [bpm, setBpm] = useState("124");
   const [mood, setMood] = useState("seductive");
@@ -10,6 +11,7 @@ export default function Home() {
   const [result, setResult] = useState(null);
 
   function generateReel() {
+    setLoading(true);
     setResult({
       concept: `A cinematic ${style} reel for "${track}" by ${artist}. The scene feels ${mood}, stylish and music-driven, with natural movement synced to ${bpm} BPM ${genre}.`,
       prompt: `Use a cinematic ${style} look. Create a music reel for "${track}" by ${artist}. Genre: ${genre}. Mood: ${mood}. Tempo: ${bpm} BPM. Natural groove, realistic body movement, cool seductive effortless confidence, shallow depth of field, warm cinematic lighting, 35mm film look, no slow motion, no jitter, no distortion.`,
@@ -17,7 +19,9 @@ export default function Home() {
       hook: `Your next reel needs this ${bpm} BPM groove.`,
       hashtags: `#${genre.replaceAll(" ", "")} #MusicReel #AIMusicVideo #FrameLab #NewMusic #DeepHouse #Reels`
     });
-  }
+setTimeout(() => {
+  setLoading(false);
+}, 1200);
 
   return (
     <main style={mainStyle}>
@@ -77,9 +81,13 @@ export default function Home() {
 </select>
         </div>
 
-        <button style={button} onClick={generateReel}>
-          Generate Reel
-        </button>
+        <button
+  style={button}
+  onClick={generateReel}
+  disabled={loading}
+>
+  {loading ? "Generating..." : "Generate Reel"}
+</button>
 
         {result && (
           <div style={outputBox}>
