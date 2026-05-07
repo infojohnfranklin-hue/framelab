@@ -150,18 +150,16 @@ function Card({ title, text }) {
     <div style={card}>
       <h3>{title}</h3>
       <p>{text}</p>
-      <button
+     <button
   style={copyButton}
   onClick={() => {
     navigator.clipboard.writeText(text);
     setCopied(true);
     setTimeout(() => setCopied(false), 1500);
-   }
+  }}
 >
-{copied ? "Copied!" : "Copy"} 
-
-
-      </button>
+  {copied ? "Copied!" : "Copy"}
+</button>
     </div>
   );
 }
