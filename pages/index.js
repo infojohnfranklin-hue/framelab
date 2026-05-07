@@ -1,140 +1,157 @@
+import { useState } from "react";
+
 export default function Home() {
+  const [artist, setArtist] = useState("John Franklin");
+  const [track, setTrack] = useState("Not on Me");
+  const [genre, setGenre] = useState("Retro Deep House");
+  const [bpm, setBpm] = useState("124");
+  const [mood, setMood] = useState("seductive");
+  const [style, setStyle] = useState("Golden Hour VHS");
+  const [result, setResult] = useState(null);
+
+  function generateReel() {
+    setResult({
+      concept: `A cinematic ${style} reel for "${track}" by ${artist}. The scene feels ${mood}, stylish and music-driven, with natural movement synced to ${bpm} BPM ${genre}.`,
+      prompt: `Use a cinematic ${style} look. Create a music reel for "${track}" by ${artist}. Genre: ${genre}. Mood: ${mood}. Tempo: ${bpm} BPM. Natural groove, realistic body movement, cool seductive effortless confidence, shallow depth of field, warm cinematic lighting, 35mm film look, no slow motion, no jitter, no distortion.`,
+      caption: `${track} by ${artist} — a ${mood} ${genre} groove made for late-night motion.`,
+      hook: `Your next reel needs this ${bpm} BPM groove.`,
+      hashtags: `#${genre.replaceAll(" ", "")} #MusicReel #AIMusicVideo #FrameLab #NewMusic #DeepHouse #Reels`
+    });
+  }
+
   return (
-    <main
-      style={{
-        minHeight: "100vh",
-        background:
-          "radial-gradient(circle at top left, #3b1d5c 0%, #0b0b0f 35%, #050506 100%)",
-        color: "white",
-        fontFamily: "Arial, sans-serif",
-        padding: "40px",
-      }}
-    >
+    <main style={mainStyle}>
       <section style={{ maxWidth: "1100px", margin: "0 auto" }}>
-        <div style={{ marginBottom: "70px", paddingTop: "50px" }}>
-          <p
-            style={{
-              color: "#b985ff",
-              fontSize: "14px",
-              letterSpacing: "2px",
-              textTransform: "uppercase",
-              marginBottom: "18px",
-              fontWeight: "bold",
-            }}
-          >
-            AI Reel Generator for Musicians
-          </p>
+        <p style={eyebrow}>AI Reel Generator for Musicians</p>
 
-          <h1
-            style={{
-              fontSize: "72px",
-              lineHeight: "1",
-              maxWidth: "850px",
-              margin: "0 0 24px 0",
-            }}
-          >
-            Create cinematic music reels in seconds.
-          </h1>
+        <h1 style={title}>Create cinematic music reels in seconds.</h1>
 
-          <p
-            style={{
-              fontSize: "22px",
-              lineHeight: "1.5",
-              maxWidth: "680px",
-              color: "#c7c7c7",
-              marginBottom: "34px",
-            }}
-          >
-            FrameLab generates viral-ready reel concepts, AI video prompts,
-            captions, hooks and hashtags for musicians, DJs and modern artists.
-          </p>
+        <p style={subtitle}>
+          FrameLab generates reel concepts, AI video prompts, captions, hooks and hashtags for musicians, DJs and modern artists.
+        </p>
 
-          <button
-            style={{
-              background: "linear-gradient(90deg, #ffffff, #d8b4ff)",
-              color: "#08080a",
-              padding: "17px 30px",
-              borderRadius: "14px",
-              border: "none",
-              fontSize: "18px",
-              cursor: "pointer",
-              fontWeight: "bold",
-              boxShadow: "0 0 30px rgba(185, 133, 255, 0.35)",
-            }}
-          >
-            Generate Reel
-          </button>
+        <div style={grid}>
+          <input style={input} value={artist} onChange={(e) => setArtist(e.target.value)} placeholder="Artist Name" />
+          <input style={input} value={track} onChange={(e) => setTrack(e.target.value)} placeholder="Track Name" />
+          <input style={input} value={genre} onChange={(e) => setGenre(e.target.value)} placeholder="Genre" />
+          <input style={input} value={bpm} onChange={(e) => setBpm(e.target.value)} placeholder="BPM" />
+          <input style={input} value={mood} onChange={(e) => setMood(e.target.value)} placeholder="Mood" />
+          <input style={input} value={style} onChange={(e) => setStyle(e.target.value)} placeholder="Visual Style" />
         </div>
 
-        <div
-          style={{
-            background: "rgba(255,255,255,0.06)",
-            border: "1px solid rgba(255,255,255,0.12)",
-            borderRadius: "24px",
-            padding: "30px",
-            boxShadow: "0 30px 80px rgba(0,0,0,0.35)",
-          }}
-        >
-          <p style={{ color: "#b985ff", fontWeight: "bold" }}>
-            Example Output
-          </p>
+        <button style={button} onClick={generateReel}>
+          Generate Reel
+        </button>
 
-          <h2 style={{ fontSize: "34px", marginBottom: "12px" }}>
-            John Franklin — Mahogany Streets
-          </h2>
+        {result && (
+          <div style={outputBox}>
+            <h2 style={{ fontSize: "34px" }}>{artist} — {track}</h2>
+            <p style={{ color: "#c7c7c7" }}>{genre} · {bpm} BPM · {style}</p>
 
-          <p style={{ color: "#c7c7c7", fontSize: "18px" }}>
-            Retro Deep House · 124 BPM · Golden Hour VHS
-          </p>
-
-          <div
-            style={{
-              marginTop: "28px",
-              display: "grid",
-              gap: "18px",
-            }}
-          >
-            <div style={cardStyle}>
-              <h3>Reel Concept</h3>
-              <p>
-                A stylish retro city street at golden hour. Two confident music
-                creators walk past vintage cars while people slowly join the
-                groove around them.
-              </p>
-            </div>
-
-            <div style={cardStyle}>
-              <h3>AI Video Prompt</h3>
-              <p>
-                Cinematic 1970s-inspired urban street scene, golden hour light,
-                warm haze, shallow depth of field, natural groove at 124 BPM,
-                cool seductive effortless confidence, static camera, realistic
-                movement, 35mm film look, no slow motion.
-              </p>
-            </div>
-
-            <div style={cardStyle}>
-              <h3>Caption</h3>
-              <p>
-                Late sunlight, warm streets and a groove that keeps moving.
-                Mahogany Streets is out now.
-              </p>
-            </div>
-
-            <div style={cardStyle}>
-              <h3>Hook</h3>
-              <p>Your next sunset drive needs this groove.</p>
-            </div>
+            <Card title="Reel Concept" text={result.concept} />
+            <Card title="AI Video Prompt" text={result.prompt} />
+            <Card title="Caption" text={result.caption} />
+            <Card title="Hook" text={result.hook} />
+            <Card title="Hashtags" text={result.hashtags} />
           </div>
-        </div>
+        )}
       </section>
     </main>
   );
 }
 
-const cardStyle = {
+function Card({ title, text }) {
+  return (
+    <div style={card}>
+      <h3>{title}</h3>
+      <p>{text}</p>
+      <button style={copyButton} onClick={() => navigator.clipboard.writeText(text)}>
+        Copy
+      </button>
+    </div>
+  );
+}
+
+const mainStyle = {
+  minHeight: "100vh",
+  background: "radial-gradient(circle at top left, #3b1d5c 0%, #0b0b0f 35%, #050506 100%)",
+  color: "white",
+  fontFamily: "Arial, sans-serif",
+  padding: "40px",
+};
+
+const eyebrow = {
+  color: "#b985ff",
+  fontSize: "14px",
+  letterSpacing: "2px",
+  textTransform: "uppercase",
+  fontWeight: "bold",
+};
+
+const title = {
+  fontSize: "64px",
+  lineHeight: "1",
+  maxWidth: "850px",
+  margin: "20px 0",
+};
+
+const subtitle = {
+  fontSize: "22px",
+  lineHeight: "1.5",
+  maxWidth: "720px",
+  color: "#c7c7c7",
+};
+
+const grid = {
+  display: "grid",
+  gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))",
+  gap: "14px",
+  marginTop: "34px",
+  marginBottom: "24px",
+};
+
+const input = {
+  background: "rgba(255,255,255,0.08)",
+  border: "1px solid rgba(255,255,255,0.14)",
+  borderRadius: "14px",
+  padding: "16px",
+  color: "white",
+  fontSize: "16px",
+};
+
+const button = {
+  background: "linear-gradient(90deg, #ffffff, #d8b4ff)",
+  color: "#08080a",
+  padding: "17px 30px",
+  borderRadius: "14px",
+  border: "none",
+  fontSize: "18px",
+  cursor: "pointer",
+  fontWeight: "bold",
+  boxShadow: "0 0 30px rgba(185, 133, 255, 0.35)",
+};
+
+const outputBox = {
+  marginTop: "44px",
+  background: "rgba(255,255,255,0.06)",
+  border: "1px solid rgba(255,255,255,0.12)",
+  borderRadius: "24px",
+  padding: "30px",
+};
+
+const card = {
   background: "rgba(0,0,0,0.35)",
   border: "1px solid rgba(255,255,255,0.08)",
   borderRadius: "18px",
   padding: "22px",
+  marginTop: "18px",
+};
+
+const copyButton = {
+  marginTop: "12px",
+  padding: "10px 16px",
+  borderRadius: "10px",
+  border: "none",
+  cursor: "pointer",
+  fontWeight: "bold",
 };
