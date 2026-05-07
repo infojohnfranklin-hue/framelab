@@ -28,7 +28,7 @@ export default function Home() {
     });
 
     setLoading(false);
-  }, 2500);
+  }, 5000);
 }
 
 return (
