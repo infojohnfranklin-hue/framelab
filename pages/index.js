@@ -89,6 +89,11 @@ export default function Home() {
 >
   {loading ? "Generating..." : "Generate Reel"}
 </button>
+{loading && (
+  <p style={{ color: "#c78cff", marginTop: "12px" }}>
+    Generating reel...
+  </p>
+)}
 
         {result && (
           <div style={outputBox}>
