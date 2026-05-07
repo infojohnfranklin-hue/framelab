@@ -79,12 +79,23 @@ export default function Home() {
 }
 
 function Card({ title, text }) {
+    const [copied, setCopied] = useState(false);
   return (
     <div style={card}>
       <h3>{title}</h3>
       <p>{text}</p>
-      <button style={copyButton} onClick={() => navigator.clipboard.writeText(text)}>
-        Copy
+      <button
+  style={copyButton}
+  onClick={() => {
+    navigator.clipboard.writeText(text);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 1500);
+   }}
+>
+ 
+
+
+        {copied ? "Copied!" : "Copy"}
       </button>
     </div>
   );
