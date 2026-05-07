@@ -21,7 +21,7 @@ export default function Home() {
     });
 setTimeout(() => {
   setLoading(false);
-}, 1200);
+}, 1500);
 
   return (
     <main style={mainStyle}>
