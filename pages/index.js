@@ -24,7 +24,7 @@ export default function Home() {
       <section style={{ maxWidth: "1100px", margin: "0 auto" }}>
         <p style={eyebrow}>AI Reel Generator for Musicians</p>
 
-        <h1 style={title}>Create cinematic music reels in seconds.</h1>
+        Create cinematic AI music reels in seconds.
 
         <p style={subtitle}>
           FrameLab generates reel concepts, AI video prompts, captions, hooks and hashtags for musicians, DJs and modern artists.
