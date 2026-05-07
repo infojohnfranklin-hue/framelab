@@ -108,6 +108,29 @@ return (
           <div style={outputBox}>
             <h2 style={{ fontSize: "34px" }}>{artist} — {track}</h2>
             <p style={{ color: "#c7c7c7" }}>{genre} · {bpm} BPM · {style}</p>
+          <button
+  style={copyButton}
+  onClick={() => {
+    navigator.clipboard.writeText(
+`Reel Concept:
+${result.concept}
+
+AI Video Prompt:
+${result.prompt}
+
+Caption:
+${result.caption}
+
+Hook:
+${result.hook}
+
+Hashtags:
+${result.hashtags}`
+    );
+  }}
+>
+  Copy All
+</button>
 
             <Card title="Reel Concept" text={result.concept} />
             <Card title="AI Video Prompt" text={result.prompt} />
