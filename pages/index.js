@@ -10,21 +10,27 @@ export default function Home() {
   const [style, setStyle] = useState("Golden Hour VHS");
   const [result, setResult] = useState(null);
 
-  function generateReel() {
-    setLoading(true);
-    setTimeout(() => {
-  setResult({
-      concept: `A cinematic ${style} reel for "${track}" by ${artist}. The scene feels ${mood}, stylish and music-driven, with natural movement synced to ${bpm} BPM ${genre}.`,
-      prompt: `Use a cinematic ${style} look. Create a music reel for "${track}" by ${artist}. Genre: ${genre}. Mood: ${mood}. Tempo: ${bpm} BPM. Natural groove, realistic body movement, cool seductive effortless confidence, shallow depth of field, warm cinematic lighting, 35mm film look, no slow motion, no jitter, no distortion.`,
-      caption: `${track} by ${artist} — a ${mood} ${genre} groove made for late-night motion.`,
-      hook: `Your next reel needs this ${bpm} BPM groove.`,
-      hashtags: `#${genre.replaceAll(" ", "")} #MusicReel #AIMusicVideo #FrameLab #NewMusic #DeepHouse #Reels`
-      });
-  setLoading(false);
-}, 2500);
+ function generateReel() {
+  setLoading(true);
 
+  setTimeout(() => {
+    setResult({
+      concept: `A cinematic ${style} reel for "${track}" by ${artist}. The scene feels ${mood}, stylish and music-driven, with natural movement synced to ${bpm} BPM ${genre}.`,
+
+      prompt: `Use a cinematic ${style} look. Create a music reel for "${track}" by ${artist}. Genre: ${genre}. Mood: ${mood}. Tempo: ${bpm} BPM. Natural groove, realistic body movement, cool seductive effortless confidence, shallow depth of field, warm cinematic lighting, 35mm film look, no slow motion, no jitter, no distortion.`,
+
+      caption: `${track} by ${artist} — a ${mood} ${genre} groove made for late-night motion.`,
+
+      hook: `Your next reel needs this ${bpm} BPM groove.`,
+
+      hashtags: `#${genre.replaceAll(" ", "")} #MusicReel #AIMusicVideo #FrameLab #NewMusic #DeepHouse #Reels`
+    });
+
+    setLoading(false);
+  }, 2500);
 }
-  return (
+
+return (
     <main style={mainStyle}>
       <section style={{ maxWidth: "1100px", margin: "0 auto" }}>
         <p style={eyebrow}>AI Reel Generator for Musicians</p>
