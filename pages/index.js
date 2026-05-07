@@ -31,6 +31,26 @@ export default function Home() {
         </p>
 
         <div style={grid}>
+          <input
+  style={input}
+  value={artist}
+  onChange={(e) => setArtist(e.target.value)}
+  placeholder="Artist Name"
+/>
+
+<input
+  style={input}
+  value={track}
+  onChange={(e) => setTrack(e.target.value)}
+  placeholder="Track Name"
+/>
+
+<input
+  style={input}
+  value={bpm}
+  onChange={(e) => setBpm(e.target.value)}
+  placeholder="BPM"
+/>
           <select style={input} value={genre} onChange={(e) => setGenre(e.target.value)}>
   <option>Retro Deep House</option>
   <option>Melodic House</option>
