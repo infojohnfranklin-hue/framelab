@@ -12,9 +12,10 @@ export default function Home() {
 
  function generateReel() {
   setLoading(true);
-   setResult(null);
+  setResult(null);
 
   setTimeout(() => {
+
     setResult({
       concept: `A cinematic ${style} reel for "${track}" by ${artist}. The scene feels ${mood}, stylish and music-driven, with natural movement synced to ${bpm} BPM ${genre}.`,
 
@@ -28,6 +29,7 @@ export default function Home() {
     });
 
     setLoading(false);
+
   }, 5000);
 }
 
