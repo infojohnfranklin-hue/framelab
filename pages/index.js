@@ -158,10 +158,9 @@ function Card({ title, text }) {
     setTimeout(() => setCopied(false), 1500);
    }
 >
- 
+{copied ? "Copied!" : "Copy"} 
 
 
-        {copied ? "Copied!" : "Copy"}
       </button>
     </div>
   );
