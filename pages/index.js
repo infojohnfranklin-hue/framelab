@@ -21,8 +21,8 @@ export default function Home() {
     });
 setTimeout(() => {
   setLoading(false);
-}, 1500);
-
+ }, 2500);
+}
   return (
     <main style={mainStyle}>
       <section style={{ maxWidth: "1100px", margin: "0 auto" }}>
