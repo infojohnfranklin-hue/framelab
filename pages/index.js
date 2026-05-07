@@ -12,6 +12,7 @@ export default function Home() {
 
  function generateReel() {
   setLoading(true);
+   setResult(null);
 
   setTimeout(() => {
     setResult({
