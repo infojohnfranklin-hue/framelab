@@ -171,10 +171,10 @@ const input = {
 const button = {
   background: "linear-gradient(90deg, #ffffff, #d8b4ff)",
   color: "#08080a",
-  padding: "17px 30px",
-  borderRadius: "14px",
+  padding: "22px 42px",
+  borderRadius: "18px",
   border: "none",
-  fontSize: "18px",
+  fontSize: "22px",
   cursor: "pointer",
   fontWeight: "bold",
   boxShadow: "0 0 30px rgba(185, 133, 255, 0.35)",
