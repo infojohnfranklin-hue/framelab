@@ -31,12 +31,30 @@ export default function Home() {
         </p>
 
         <div style={grid}>
-          <input style={input} value={artist} onChange={(e) => setArtist(e.target.value)} placeholder="Artist Name" />
-          <input style={input} value={track} onChange={(e) => setTrack(e.target.value)} placeholder="Track Name" />
-          <input style={input} value={genre} onChange={(e) => setGenre(e.target.value)} placeholder="Genre" />
-          <input style={input} value={bpm} onChange={(e) => setBpm(e.target.value)} placeholder="BPM" />
-          <input style={input} value={mood} onChange={(e) => setMood(e.target.value)} placeholder="Mood" />
-          <input style={input} value={style} onChange={(e) => setStyle(e.target.value)} placeholder="Visual Style" />
+          <select style={input} value={genre} onChange={(e) => setGenre(e.target.value)}>
+  <option>Retro Deep House</option>
+  <option>Melodic House</option>
+  <option>Afro House</option>
+  <option>Tech House</option>
+  <option>Deep House</option>
+</select>
+
+<select style={input} value={mood} onChange={(e) => setMood(e.target.value)}>
+  <option>seductive</option>
+  <option>nostalgic</option>
+  <option>dreamy</option>
+  <option>dark</option>
+  <option>euphoric</option>
+  <option>underground</option>
+</select>
+
+<select style={input} value={style} onChange={(e) => setStyle(e.target.value)}>
+  <option>Golden Hour VHS</option>
+  <option>Night Drive</option>
+  <option>Cassette Aesthetic</option>
+  <option>Cinematic Club</option>
+  <option>Urban Sunset</option>
+</select>
         </div>
 
         <button style={button} onClick={generateReel}>
