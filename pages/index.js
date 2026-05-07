@@ -172,4 +172,6 @@ const copyButton = {
   border: "none",
   cursor: "pointer",
   fontWeight: "bold",
+  background: "white",
+  color: "black"
 };
