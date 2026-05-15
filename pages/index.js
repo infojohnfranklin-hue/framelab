@@ -1,147 +1,490 @@
-import { useState } from "react";
-
+import { useState, useRef, useEffect } from "react";
+import jsPDF from "jspdf";
 export default function Home() {
-  const [artist, setArtist] = useState("John Franklin");
-  const [track, setTrack] = useState("Not on Me");
-  const [loading, setLoading] = useState(false);
-  const [genre, setGenre] = useState("Retro Deep House");
-  const [bpm, setBpm] = useState("124");
-  const [mood, setMood] = useState("seductive");
-  const [style, setStyle] = useState("Golden Hour VHS");
-  const [result, setResult] = useState(null);
+const [artist, setArtist] = useState("Velvet Mirage");
+const [track, setTrack] = useState("After Midnight");
+const [loading, setLoading] = useState(false);
+const [copiedAll, setCopiedAll] = useState(false);
+const [genre, setGenre] = useState("Melodic House");
+const [bpm, setBpm] = useState("122");
+const [mood, setMood] = useState("luxury sunset");
+const [style, setStyle] = useState("Miami Afterdark");
+const [result, setResult] = useState(null);
+const [history, setHistory] = useState([]);
+const [creditsUsed, setCreditsUsed] = useState(0);
+const resultRef = useRef(null);
 
- function generateReel() {
+useEffect(() => {
+  const savedHistory = localStorage.getItem("framelab_history");
+
+  if (savedHistory) {
+    try {
+      setHistory(JSON.parse(savedHistory));
+    } catch (error) {
+      localStorage.removeItem("framelab_history");
+      setHistory([]);
+    }
+  }
+}, []);
+useEffect(() => {
+  localStorage.setItem(
+    "framelab_history",
+    JSON.stringify(history)
+  );
+}, [history]);
+async function generateReel() {
+  if (creditsUsed >= 3) {
+  const checkoutResponse = await fetch("/api/create-checkout-session", {
+    method: "POST",
+  });
+
+  const checkoutData = await checkoutResponse.json();
+
+  window.location.href = checkoutData.url;
+  return;
+}
   setLoading(true);
   setResult(null);
 
-  setTimeout(() => {
-
-    setResult({
-      concept: `A cinematic ${style} reel for "${track}" by ${artist}. The scene feels ${mood}, stylish and music-driven, with natural movement synced to ${bpm} BPM ${genre}.`,
-
-      prompt: `Use a cinematic ${style} look. Create a music reel for "${track}" by ${artist}. Genre: ${genre}. Mood: ${mood}. Tempo: ${bpm} BPM. Natural groove, realistic body movement, cool seductive effortless confidence, shallow depth of field, warm cinematic lighting, 35mm film look, no slow motion, no jitter, no distortion.`,
-
-      caption: `${track} by ${artist} — a ${mood} ${genre} groove made for late-night motion.`,
-
-      hook: `Your next reel needs this ${bpm} BPM groove.`,
-
-      hashtags: `#${genre.replaceAll(" ", "")} #MusicReel #AIMusicVideo #FrameLab #NewMusic #DeepHouse #Reels`
+  try {
+    const response = await fetch("/api/generate", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        artistName: artist,
+        trackName: track,
+        bpm,
+        genre,
+        mood,
+        visualStyle: style,
+      }),
     });
 
-    setLoading(false);
+    const data = await response.json();
 
-  }, 5000);
+const newResult = {
+  concept: data.reelConcept,
+  prompt: data.aiVideoPrompt,
+  caption: data.caption,
+  hook: data.hook,
+  hashtags: data.hashtags,
+  viralScore: data.viralScore,
+};
+
+setResult(newResult);
+setCreditsUsed((prev) => prev + 1);
+setHistory((prev) => {
+  const updated = [
+    {
+      artist,
+      track,
+      genre,
+      bpm,
+      mood,
+      style,
+      date: new Date().toLocaleString(),
+      result: newResult,
+    },
+    ...prev,
+  ];
+
+  return updated.slice(0, 10);
+});
+    setTimeout(() => {
+  resultRef.current?.scrollIntoView({
+    behavior: "smooth",
+  });
+}, 100);
+  } catch (error) {
+    console.error(error);
+    alert("AI generation failed");
+  }
+
+  setLoading(false);
 }
+ 
 
 return (
-    <main style={mainStyle}>
-      <section style={{ maxWidth: "1100px", margin: "0 auto" }}>
-        <p style={eyebrow}>AI Reel Generator for Musicians</p>
+  <main style={mainStyle}>
+    <style>{spinnerStyle}</style>
+    <section style={{ maxWidth: "1100px", margin: "0 auto" }}>
+  <p style={eyebrow}>CINEMATIC AI REEL GENERATOR</p>
 
-        Create cinematic AI music reels in seconds.
+<h1 style={title}>
+  Create viral cinematic reels for your music.
+</h1>
 
-        <p style={subtitle}>
-          FrameLab generates reel concepts, AI video prompts, captions, hooks and hashtags for musicians, DJs and modern artists.
-        </p>
+<p style={subtitle}>
+  Built for modern musicians, DJs and artists who want stunning AI-powered
+  social content in seconds.
+</p>
 
-        <div style={grid}>
+      <div style={{ ...grid, alignItems: "end" }}>
+        <div>
+          <p style={label}>Artist Name</p>
           <input
-  style={input}
-  value={artist}
-  onChange={(e) => setArtist(e.target.value)}
-  placeholder="Artist Name"
-/>
-
-<input
-  style={input}
-  value={track}
-  onChange={(e) => setTrack(e.target.value)}
-  placeholder="Track Name"
-/>
-
-<input
-  style={input}
-  value={bpm}
-  onChange={(e) => setBpm(e.target.value)}
-  placeholder="BPM"
-/>
-          <select style={input} value={genre} onChange={(e) => setGenre(e.target.value)}>
-  <option>Retro Deep House</option>
-  <option>Melodic House</option>
-  <option>Afro House</option>
-  <option>Tech House</option>
-  <option>Deep House</option>
-</select>
-
-<select style={input} value={mood} onChange={(e) => setMood(e.target.value)}>
-  <option>seductive</option>
-  <option>nostalgic</option>
-  <option>dreamy</option>
-  <option>dark</option>
-  <option>euphoric</option>
-  <option>underground</option>
-</select>
-
-<select style={input} value={style} onChange={(e) => setStyle(e.target.value)}>
-  <option>Golden Hour VHS</option>
-  <option>Night Drive</option>
-  <option>Cassette Aesthetic</option>
-  <option>Cinematic Club</option>
-  <option>Urban Sunset</option>
-</select>
+            style={input}
+            value={artist}
+            onChange={(e) => setArtist(e.target.value)}
+            placeholder="Artist Name"
+          />
         </div>
 
-        <button
-  style={button}
-  onClick={generateReel}
-  disabled={loading}
->
-  {loading ? "Generating..." : "Generate Reel"}
-</button>
-{loading && (
-  <p style={{ color: "#c78cff", marginTop: "12px" }}>
-    Generating reel...
-  </p>
-)}
+        <div>
+          <p style={label}>Track Name</p>
+          <input
+            style={input}
+            value={track}
+            onChange={(e) => setTrack(e.target.value)}
+            placeholder="Track Name"
+          />
+        </div>
 
-        {result && (
-          <div style={outputBox}>
-            <h2 style={{ fontSize: "34px" }}>{artist} — {track}</h2>
-            <p style={{ color: "#c7c7c7" }}>{genre} · {bpm} BPM · {style}</p>
-          <button
+        <div>
+          <p style={label}>BPM</p>
+          <input
+            style={input}
+            value={bpm}
+            onChange={(e) => setBpm(e.target.value)}
+            placeholder="BPM"
+          />
+        </div>
+
+        <div>
+          <p style={label}>Genre</p>
+          <select
+            style={input}
+            value={genre}
+            onChange={(e) => setGenre(e.target.value)}
+          >
+<option>Retro Deep House</option>
+<option>Melodic House</option>
+<option>Afro House</option>
+<option>Tech House</option>
+<option>Deep House</option>
+<option>Minimal House</option>
+<option>Progressive House</option>
+<option>Organic House</option>
+<option>Lo-Fi House</option>
+<option>Future Garage</option>
+<option>Indie Dance</option>
+<option>Electronica</option>
+          </select>
+        </div>
+
+        <div>
+          <p style={label}>Mood</p>
+          <select
+            style={input}
+            value={mood}
+            onChange={(e) => setMood(e.target.value)}
+          >
+<option>seductive</option>
+<option>nostalgic</option>
+<option>dreamy</option>
+<option>dark</option>
+<option>euphoric</option>
+<option>underground</option>
+<option>midnight energy</option>
+<option>luxury sunset</option>
+<option>afterhours</option>
+<option>cinematic tension</option>
+<option>dreamstate</option>
+<option>festival rush</option>
+<option>underground desire</option>
+<option>ocean drive</option>
+<option>neon romance</option>
+          </select>
+        </div>
+
+        <div>
+          <p style={label}>Style</p>
+          <select
+            style={input}
+            value={style}
+            onChange={(e) => setStyle(e.target.value)}
+          >
+<option>Golden Hour VHS</option>
+<option>Night Drive</option>
+<option>Cassette Aesthetic</option>
+<option>Cinematic Club</option>
+<option>Urban Sunset</option>
+<option>Tokyo Neon</option>
+<option>Luxury Rooftop</option>
+<option>European Summer</option>
+<option>Y2K Flash Cam</option>
+<option>Analog Dreams</option>
+<option>Underground Berlin</option>
+<option>Chrome Future</option>
+<option>Desert Mirage</option>
+<option>Miami Afterdark</option>
+<option>Warehouse Shadows</option>
+          </select>
+        </div>
+      </div>
+
+      <button
+        onClick={generateReel}
+        disabled={loading}
+        style={{
+          ...button,
+          opacity: loading ? 0.7 : 1,
+          cursor: loading ? "not-allowed" : "pointer",
+        }}
+      >
+{loading ? (
+  <div
+    style={{
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      gap: "12px",
+    }}
+  >
+    <div style={spinner}></div>
+    Generating your cinematic reel...
+  </div>
+) : (
+  "Generate Cinematic Reel Package"
+)}
+      </button>
+
+      {result && (
+<div ref={resultRef} style={outputBox}>
+          <h2 style={{ fontSize: "54px" }}>
+            {artist} — {track}
+          </h2>
+
+          <p style={{ color: "#c7c7c7" }}>
+            {genre} • {bpm} BPM • {style}
+          </p>
+
+<button
   style={copyButton}
   onClick={() => {
-    navigator.clipboard.writeText(
-`Reel Concept:
+    navigator.clipboard.writeText(`
+REEL CONCEPT:
 ${result.concept}
 
-AI Video Prompt:
+AI VIDEO PROMPT:
 ${result.prompt}
 
-Caption:
+CAPTION:
 ${result.caption}
 
-Hook:
+HOOK:
 ${result.hook}
 
-Hashtags:
-${result.hashtags}`
-    );
+HASHTAGS:
+${result.hashtags}
+    `);
+
+    setCopiedAll(true);
+
+    setTimeout(() => {
+      setCopiedAll(false);
+    }, 1500);
   }}
 >
-  Copy All
+  {copiedAll ? "Copied!" : "Copy Reel Package"}
 </button>
+<button
+  style={copyButton}
+  onClick={() => {
+    const text = `
+REEL CONCEPT:
+${result.concept}
 
-            <Card title="Reel Concept" text={result.concept} />
-            <Card title="AI Video Prompt" text={result.prompt} />
-            <Card title="Caption" text={result.caption} />
-            <Card title="Hook" text={result.hook} />
-            <Card title="Hashtags" text={result.hashtags} />
-          </div>
-        )}
-      </section>
-    </main>
-  );
+AI VIDEO PROMPT:
+${result.prompt}
+
+CAPTION:
+${result.caption}
+
+HOOK:
+${result.hook}
+
+HASHTAGS:
+${result.hashtags}
+    `;
+
+    const blob = new Blob([text], { type: "text/plain" });
+    const url = URL.createObjectURL(blob);
+
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `${artist}-${track}-FrameLab.txt`;
+    a.click();
+
+    URL.revokeObjectURL(url);
+  }}
+>
+Export TXT Package
+</button>
+<button
+  style={copyButton}
+  onClick={() => {
+    const doc = new jsPDF();
+
+    doc.setFontSize(18);
+    doc.text("FrameLab Reel Package", 20, 20);
+
+    doc.setFontSize(12);
+    doc.text(`Artist: ${artist}`, 20, 35);
+    doc.text(`Track: ${track}`, 20, 45);
+    doc.text(`Genre: ${genre}`, 20, 55);
+    doc.text(`BPM: ${bpm}`, 20, 65);
+    doc.text(`Style: ${style}`, 20, 75);
+
+    const content = `
+REEL CONCEPT:
+${result.concept}
+
+AI VIDEO PROMPT:
+${result.prompt}
+
+CAPTION:
+${result.caption}
+
+HOOK:
+${result.hook}
+
+HASHTAGS:
+${result.hashtags}
+    `;
+
+    const lines = doc.splitTextToSize(content, 170);
+    doc.text(lines, 20, 90);
+
+    doc.save(`${artist}-${track}-FrameLab.pdf`);
+  }}
+>
+  Export PDF
+</button>
+          <Card title="Reel Concept" text={result.concept} />
+          <Card title="AI Video Prompt" text={result.prompt} />
+          <Card title="Caption" text={result.caption} />
+          <Card title="Hook" text={result.hook} />
+          <Card title="Hashtags" text={result.hashtags} />
+          {result.viralScore && (
+  <div
+    style={{
+      marginTop: "20px",
+      padding: "18px",
+      borderRadius: "18px",
+      background: "rgba(185,133,255,0.12)",
+      border: "1px solid rgba(185,133,255,0.25)",
+      color: "#b985ff",
+      fontWeight: "bold",
+      fontSize: "20px",
+    }}
+  >
+    Viral Score: {result.viralScore}/100
+  </div>
+)}
+        </div>
+      )}
+{history.length > 0 && (
+  <div style={{ marginTop: "60px" }}>
+    <h2
+      style={{
+        fontSize: "32px",
+        marginBottom: "20px",
+      }}
+    >
+      Reel History
+    </h2>
+
+    {history.map((item, index) => (
+      <div
+        key={index}
+        onClick={() => {
+          setArtist(item.artist);
+          setTrack(item.track);
+          setGenre(item.genre);
+          setBpm(item.bpm);
+          setMood(item.mood);
+          setStyle(item.style);
+          setResult(item.result);
+
+          setTimeout(() => {
+            resultRef.current?.scrollIntoView({
+              behavior: "smooth",
+            });
+          }, 100);
+        }}
+        style={{
+          background: "rgba(255,255,255,0.06)",
+          boxShadow: "0 0 0 rgba(185,133,255,0)",
+          border: "1px solid rgba(255,255,255,0.1)",
+          borderRadius: "20px",
+          padding: "20px",
+          marginBottom: "16px",
+          cursor: "pointer",
+          
+          transition: "all 0.2s ease",
+          transform: "translateY(0px)",
+        }}
+        onMouseEnter={(e) => {
+  e.currentTarget.style.transform = "translateY(-6px)";
+  e.currentTarget.style.boxShadow =
+    "0 25px 60px rgba(185,133,255,0.25)";
+}}
+
+onMouseLeave={(e) => {
+  e.currentTarget.style.transform = "translateY(0px)";
+  e.currentTarget.style.boxShadow = "0 0 0 rgba(0,0,0,0)";
+}}
+      >
+        <p style={{ color: "#b985ff", fontWeight: "bold" }}>
+          {item.artist} — {item.track}
+        </p>
+
+        <p style={{ color: "#c7c7c7", marginTop: "6px" }}>
+          {item.genre} • {item.bpm} BPM • {item.style}
+        </p>
+
+        <p
+          style={{
+            color: "#8b8b8b",
+            fontSize: "13px",
+            marginTop: "10px",
+          }}
+        >
+          <button
+  onClick={(e) => {
+    e.stopPropagation();
+
+    setHistory((prev) =>
+      prev.filter((_, i) => i !== index)
+    );
+  }}
+  style={{
+    marginTop: "12px",
+    padding: "8px 14px",
+    borderRadius: "10px",
+    border: "none",
+    background: "#ff4d4d",
+    color: "white",
+    cursor: "pointer",
+    fontWeight: "bold",
+    fontSize: "12px",
+  }}
+>
+  Delete
+</button>
+          {item.date}
+
+        </p>
+      </div>
+    ))}
+  </div>
+)}
+</section>
+  </main>
+);
 }
 
 function Card({ title, text }) {
@@ -153,6 +496,7 @@ function Card({ title, text }) {
      <button
   style={copyButton}
   onClick={() => {
+
     navigator.clipboard.writeText(text);
     setCopied(true);
     setTimeout(() => setCopied(false), 1500);
@@ -166,10 +510,13 @@ function Card({ title, text }) {
 
 const mainStyle = {
   minHeight: "100vh",
-  background: "radial-gradient(circle at top left, #3b1d5c 0%, #0b0b0f 35%, #050506 100%)",
+  background: "radial-gradient(circle at top left, #3b1d5c 0%, #0b0b12 35%)",
   color: "white",
   fontFamily: "Arial, sans-serif",
-  padding: "40px",
+  padding: "24px",
+  overflowX: "hidden",
+  display: "flex",
+justifyContent: "center",
 };
 
 const eyebrow = {
@@ -181,7 +528,8 @@ const eyebrow = {
 };
 
 const title = {
-  fontSize: "64px",
+fontSize: "clamp(36px, 8vw, 64px)",
+fontWeight: "800",
   lineHeight: "1",
   maxWidth: "850px",
   margin: "20px 0",
@@ -196,7 +544,8 @@ const subtitle = {
 
 const grid = {
   display: "grid",
-  gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))",
+gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))",
+width: "100%",
   gap: "14px",
   marginTop: "34px",
   marginBottom: "24px",
@@ -204,25 +553,38 @@ const grid = {
 
 const input = {
   background: "rgba(255,255,255,0.08)",
-  border: "1px solid rgba(255,255,255,0.14)",
-  borderRadius: "14px",
-  padding: "16px",
+  border: "1px solid rgba(255,255,255,0.12)",
+  borderRadius: "18px",
+  padding: "18px",
   color: "white",
-  fontSize: "16px",
+  fontSize: "17px",
+  width: "100%",
+  outline: "none",
+  backdropFilter: "blur(12px)",
+  boxSizing: "border-box",
 };
 
 const button = {
-  background: "linear-gradient(90deg, #ffffff, #d8b4ff)",
+  background: "linear-gradient(135deg, #ffffff 0%, #d8b4ff 100%)",
   color: "#08080a",
-  padding: "22px 42px",
-  borderRadius: "18px",
-  border: "none",
-  fontSize: "22px",
+  padding: "20px 32px",
+  borderRadius: "20px",
+  border: "1px solid rgba(255,255,255,0.15)",
+  fontSize: "18px",
   cursor: "pointer",
-  fontWeight: "bold",
-  boxShadow: "0 0 30px rgba(185, 133, 255, 0.35)",
+  fontWeight: "700",
+  boxShadow: "0 10px 40px rgba(185, 133, 255, 0.35)",
+  width: "100%",
+  maxWidth: "520px",
+  transition: "all 0.25s ease",
+  transform: "translateY(0px)",
 };
-
+const label = {
+  color: "#c7c7c7",
+  fontSize: "14px",
+  marginBottom: "6px",
+  marginTop: "10px",
+};
 const outputBox = {
   marginTop: "44px",
   background: "rgba(255,255,255,0.06)",
@@ -241,11 +603,34 @@ const card = {
 
 const copyButton = {
   marginTop: "12px",
-  padding: "10px 16px",
-  borderRadius: "10px",
-  border: "none",
+  padding: "12px 18px",
+  borderRadius: "12px",
+  border: "1px solid rgba(255,255,255,0.15)",
   cursor: "pointer",
-  fontWeight: "bold",
-  background: "white",
-  color: "black"
+  fontWeight: "700",
+  background: "rgba(255,255,255,0.95)",
+  color: "#050506",
+  fontSize: "14px",
 };
+const spinner = {
+  width: "22px",
+  height: "22px",
+  border: "3px solid rgba(255,255,255,0.15)",
+  borderTop: "3px solid #ffffff",
+  borderRight: "3px solid #b985ff",
+  borderRadius: "50%",
+  animation: "spin 0.8s linear infinite",
+  boxShadow: "0 0 20px rgba(185,133,255,0.8)",
+};
+
+const spinnerStyle = `
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
+}
+`;
