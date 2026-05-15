@@ -226,30 +226,30 @@ return (
       </div>
 
       <button
-        onClick={generateReel}
-        disabled={loading}
-        style={{
-          ...button,
-          opacity: loading ? 0.7 : 1,
-          cursor: loading ? "not-allowed" : "pointer",
-        }}
-      >
-{loading ? (
-  <div
-    style={{
-      display: "flex",
-      alignItems: "center",
-      justifyContent: "center",
-      gap: "12px",
-    }}
-  >
-    <div style={spinner}></div>
-    Generating your cinematic reel...
-  </div>
-) : (
-  "Generate Cinematic Reel Package"
-)}
-      </button>
+  style={{
+    ...button,
+    opacity: loading ? 0.7 : 1,
+    cursor: loading ? "not-allowed" : "pointer",
+  }}
+  onClick={async () => {
+    try {
+      const response = await fetch("/api/create-checkout-session", {
+        method: "POST",
+      });
+
+      const data = await response.json();
+
+      if (data.url) {
+        window.location.href = data.url;
+      }
+    } catch (err) {
+      console.error(err);
+      alert("Stripe checkout failed");
+    }
+  }}
+>
+  Subscribe for 19 CHF/month
+</button>
 
       {result && (
 <div ref={resultRef} style={outputBox}>
