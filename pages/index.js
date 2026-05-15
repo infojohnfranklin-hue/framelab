@@ -33,7 +33,7 @@ useEffect(() => {
   );
 }, [history]);
 async function generateReel() {
-  if (creditsUsed >= 3) {
+  if (creditsUsed >= 2) {
   const checkoutResponse = await fetch("/api/create-checkout-session", {
     method: "POST",
   });
@@ -231,24 +231,10 @@ return (
     opacity: loading ? 0.7 : 1,
     cursor: loading ? "not-allowed" : "pointer",
   }}
-  onClick={async () => {
-    try {
-      const response = await fetch("/api/create-checkout-session", {
-        method: "POST",
-      });
-
-      const data = await response.json();
-
-      if (data.url) {
-        window.location.href = data.url;
-      }
-    } catch (err) {
-      console.error(err);
-      alert("Stripe checkout failed");
-    }
-  }}
+  disabled={loading}
+  onClick={generateReel}
 >
-  Start with 2 Free Credits — Then 19 CHF/month
+  {loading ? "Generating..." : "Generate Reel — 2 Free Credits, then 19 CHF/month"}
 </button>
 
       {result && (
