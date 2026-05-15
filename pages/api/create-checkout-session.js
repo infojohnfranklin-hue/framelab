@@ -30,8 +30,8 @@ export default async function handler(req, res) {
         },
       ],
 
-      success_url: "http://localhost:3000?success=true",
-      cancel_url: "http://localhost:3000?canceled=true",
+      success_url: "https://www.framelabapp.com/success",
+      cancel_url: "https://www.framelabapp.com",
     });
 
     return res.status(200).json({
