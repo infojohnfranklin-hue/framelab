@@ -248,7 +248,7 @@ return (
     }
   }}
 >
-  Subscribe for 19 CHF/month
+  Start with 2 Free Credits — Then 19 CHF/month
 </button>
 
       {result && (
